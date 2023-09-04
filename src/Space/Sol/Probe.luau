@@ -3,7 +3,7 @@ local RunService = game:GetService("RunService")
 
 local Promise = require(ReplicatedStorage.Packages.Promise)
 
-export type Probe = {
+type Probe = {
 	Bindings: { [string]: { (...any) -> any } },
 	Probes: { event: RemoteEvent, func: RemoteFunction },
 	_setup: (self: Probe) -> (),
@@ -46,24 +46,33 @@ function Probe._client(self: Probe)
 	-- remoteevent
 	self.Probes.event.OnClientEvent:Connect(function(event_name: string, ...: any)
 		local compressedVararg = pack(...)
-		if self.Bindings[event_name] ~= nil then
-			for _, callback in self.Bindings[event_name] do
-				Promise.new(function(resolve, reject)
-					callback(unpack(compressedVararg))
-					resolve()
-				end):catch(function(err)
-					warn(err)
-				end)
+		for i = 1, 50 do
+			if self.Bindings[event_name] ~= nil then
+				for _, callback in self.Bindings[event_name] do
+					Promise.new(function(resolve, reject)
+						callback(unpack(compressedVararg))
+						resolve()
+					end):catch(function(err)
+						warn(err)
+					end)
+				end
+
+				break
 			end
+
+			task.wait()
 		end
 	end)
 	self.Probes.func.OnClientInvoke = function(event_name: string, ...: any)
-		local callback = self.Bindings["_" .. event_name][1]
-		if callback ~= nil then
-			return callback(...)
-		else
-			error("No listeners has been found for [" .. event_name .. "]")
+		for i = 1, 50 do
+			local callback = self.Bindings["_" .. event_name][1]
+			if callback ~= nil then
+				return callback(...)
+			end
+
+			task.wait()
 		end
+		error("No listeners has been found for [" .. event_name .. "]")
 	end
 end
 

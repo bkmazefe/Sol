@@ -1,16 +1,16 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Promise = require(ReplicatedStorage.Packages.Promise)
 
-local Astro = {}
-Astro.__index = Astro
+local Comet = {}
+Comet.__index = Comet
 
-export type Astro<T> = {
-	new: (T) -> Astro<T>,
-	set: (self: Astro<T>, new_value: T, force_update: boolean) -> (),
-	get: (self: Astro<T>) -> T,
-	tie: (self: Astro<T>, callback: (value: T) -> any, on_disconnect: (() -> ())?) -> () -> (),
-	_updateAll: (self: Astro<T>) -> (),
-	toString: (self: Astro<T>) -> (),
+export type Comet<T> = {
+	new: (T) -> Comet<T>,
+	set: (self: Comet<T>, new_value: T, force_update: boolean) -> (),
+	get: (self: Comet<T>) -> T,
+	tie: (self: Comet<T>, callback: (value: T) -> any, on_disconnect: (() -> ())?) -> () -> (),
+	_updateAll: (self: Comet<T>) -> (),
+	toString: (self: Comet<T>) -> (),
 
 	stored_value: T,
 	_connections: { [(value: T) -> any]: (value: T) -> any },
@@ -18,27 +18,27 @@ export type Astro<T> = {
 
 local WEAK_KEYS_METATABLE = { __mode = "k" }
 
-function Astro.new<T>(value: T): Astro<T>
+function Comet.new<T>(value: T): Comet<T>
 	local self = setmetatable({
 		stored_value = value,
 		_connections = setmetatable({}, WEAK_KEYS_METATABLE),
-	}, Astro)
+	}, Comet)
 
 	return self
 end
 
-function Astro.set<T>(self: Astro<T>, new_value: T, force_update: boolean?)
+function Comet.set<T>(self: Comet<T>, new_value: T, force_update: boolean?)
 	if self.stored_value ~= new_value or force_update then
 		self.stored_value = new_value
 		self:_updateAll()
 	end
 end
 
-function Astro.get<T>(self: Astro<T>): T
+function Comet.get<T>(self: Comet<T>): T
 	return self.stored_value
 end
 
-function Astro._updateAll<T>(self: Astro<T>)
+function Comet._updateAll<T>(self: Comet<T>)
 	for _, callback in self._connections do
 		Promise.new(function()
 			callback(self:get())
@@ -46,7 +46,7 @@ function Astro._updateAll<T>(self: Astro<T>)
 	end
 end
 
-function Astro.tie<T>(self: Astro<T>, callback: (value: T) -> any, on_disconnect: (() -> ())?): () -> ()
+function Comet.tie<T>(self: Comet<T>, callback: (value: T) -> any, on_disconnect: (() -> ())?): () -> ()
 	self._connections[callback] = callback
 
 	return function()
@@ -57,8 +57,8 @@ function Astro.tie<T>(self: Astro<T>, callback: (value: T) -> any, on_disconnect
 	end
 end
 
-function Astro.toString<T>(self: Astro<T>)
+function Comet.toString<T>(self: Comet<T>)
 	return tostring(self:get())
 end
 
-return Astro.new
+return Comet.new

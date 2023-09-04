@@ -1,8 +1,8 @@
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Sol = require(game:GetService("ReplicatedStorage").Sol)
 
-local Probe = require(ReplicatedStorage.Probe)
+Sol:init():await()
 
-Players.PlayerAdded:Connect(function(player)
-	Probe:Fire("Hello", player, "bkmazefe")
+game.Players.PlayerAdded:Connect(function(player: Player)
+	--player.CharacterAdded:Wait()
+	Sol.Probe:Fire("Hello", player, "bkmazefe")
 end)
