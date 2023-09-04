@@ -1,5 +1,5 @@
 {
-  "name": "project name",
+  "name": "sol",
   "tree": {
     "$className": "DataModel",
     "ReplicatedStorage": {
