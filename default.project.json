@@ -13,14 +13,14 @@
     "ServerScriptService": {
       "$className": "ServerScriptService",
       "$ignoreUnknownInstances": true,
-      "$path": "src/Earth"
+      "$path": "src/Server"
     },
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
         "$ignoreUnknownInstances": true,
-        "$path": "src/Moon"
+        "$path": "src/Client"
       },
       "$ignoreUnknownInstances": true
     }

@@ -31,11 +31,15 @@ local function initModules(folder: Folder, object)
 end
 
 local function init(self: SolTypes.Sol)
-	local services = ServerScriptService.Services
-	local handlers = ServerScriptService.Handlers
+	local services = ServerScriptService:FindFirstChild("Services")
+	local handlers = ServerScriptService:FindFirstChild("Handlers")
 
-	initModules(services, self):await()
-	initModules(handlers, self):await()
+	if services then
+		initModules(services, self):await()
+	end
+	if handlers then
+		initModules(handlers, self):await()
+	end
 end
 
 return init

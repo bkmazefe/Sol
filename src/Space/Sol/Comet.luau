@@ -1,20 +1,12 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local SolTypes = require(script.Parent.SolTypes)
 local Promise = require(ReplicatedStorage.Packages.Promise)
 
 local Comet = {}
 Comet.__index = Comet
 
-export type Comet<T> = {
-	new: (T) -> Comet<T>,
-	set: (self: Comet<T>, new_value: T, force_update: boolean) -> (),
-	get: (self: Comet<T>) -> T,
-	tie: (self: Comet<T>, callback: (value: T) -> any, on_disconnect: (() -> ())?) -> () -> (),
-	_updateAll: (self: Comet<T>) -> (),
-	toString: (self: Comet<T>) -> (),
-
-	stored_value: T,
-	_connections: { [(value: T) -> any]: (value: T) -> any },
-}
+type Comet<T> = SolTypes.Comet<T>
 
 local WEAK_KEYS_METATABLE = { __mode = "k" }
 

@@ -19,6 +19,8 @@ function Sol.init(self: SolTypes.Sol)
 		self.Comet = require(script.Comet)
 
 		resolve("Sol initialized")
+	end):catch(function(body)
+		print(body)
 	end)
 end
 

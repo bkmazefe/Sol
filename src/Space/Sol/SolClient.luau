@@ -1,4 +1,3 @@
-local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Promise = require(ReplicatedStorage.Packages.Promise)
@@ -31,11 +30,15 @@ local function initModules(folder: Folder, object)
 end
 
 local function init(self: SolTypes.Sol)
-	local services = Players.LocalPlayer.PlayerScripts:WaitForChild("Services")
-	local handlers = Players.LocalPlayer.PlayerScripts:WaitForChild("Handlers")
+	local services = ReplicatedStorage:FindFirstChild("Services")
+	local handlers = ReplicatedStorage:FindFirstChild("Handlers")
 
-	initModules(services, self):await()
-	initModules(handlers, self):await()
+	if services then
+		initModules(services, self):await()
+	end
+	if handlers then
+		initModules(handlers, self):await()
+	end
 end
 
 return init
